@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-def resize_images(input_folder, output_folder, target_size):
+def resize_images(input_folder, output_folder, target_size_width):
     # 检查输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -20,26 +20,21 @@ def resize_images(input_folder, output_folder, target_size):
 
                 # 计算等比例缩放的尺寸
                 aspect_ratio = original_width / original_height
-                target_width, target_height = target_size
-
-                # 计算新的尺寸，保持比例
-                if target_width / target_height > aspect_ratio:
-                    new_width = int(target_height * aspect_ratio)
-                    new_height = target_height
-                else:
-                    new_width = target_width
-                    new_height = int(target_width / aspect_ratio)
+                target_width, target_height = target_size_width, int(target_size_width / aspect_ratio)
 
                 # 等比例resize图像
-                resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                resized_img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)
 
                 # 保存到输出文件夹
                 resized_img.save(output_image_path)
                 print(f"Saved resized image: {output_image_path}")
 
 # 示例：将文件夹中的图片等比例resize到1920x1280，并保存在另一个文件夹
-input_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_resize'
-output_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_recover'
-target_size = (5472, 3648)
+# input_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_resize'
+# output_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_recover'
+input_folder = "/home/qinyh/codebase/semantic-segmentation/data"
+output_folder = "/home/qinyh/codebase/semantic-segmentation/data_resized"
+# original_size = (5472, 3648)
+target_size_width = 1920
 
-resize_images(input_folder, output_folder, target_size)
+resize_images(input_folder, output_folder, target_size_width)
