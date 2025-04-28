@@ -42,8 +42,8 @@ def process_images_and_generate_sample(img_folder, output_path, height=3648, wid
 
     # 筛选 1%-99% 分位数范围内的值
     def filter_percentile(channel):
-        lower = np.percentile(channel, 1)
-        upper = np.percentile(channel, 99)
+        lower = np.percentile(channel, 3)
+        upper = np.percentile(channel, 97)
         return channel[(channel >= lower) & (channel <= upper)]
 
     R_filtered = filter_percentile(R)

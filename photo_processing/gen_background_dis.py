@@ -44,8 +44,8 @@ def process_images_and_generate_sample(img_folder, output_path, height=3648, wid
     G_sampled = np.random.choice(G, size=(height, width)).astype(np.uint8)
     B_sampled = np.random.choice(B, size=(height, width)).astype(np.uint8)
 
-    # 合并通道
-    generated_image = cv2.merge([B_sampled, G_sampled, R_sampled])
+    # 合并通道(灰度图)
+    generated_image = cv2.merge([R_sampled, R_sampled, R_sampled])
 
     # 保存生成的图像
     cv2.imwrite(output_path, generated_image)

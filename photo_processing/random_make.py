@@ -49,15 +49,15 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
                 placed_regions.append((random_x, random_y, img_width, img_height))
                 break
 
-    # 对生成的图像进行平滑处理（高斯模糊）
-    smoothed_background = cv2.GaussianBlur(background, (15, 15), 0)
+    # # 对生成的图像进行平滑处理（高斯模糊）
+    # smoothed_background = cv2.GaussianBlur(background, (15, 15), 0)
 
     # 保存平滑处理后的图像
     output_path = "photo_processing/output_with_multiple_patches_smoothed.bmp"
-    cv2.imwrite(output_path, smoothed_background)
+    cv2.imwrite(output_path, background)
     print(f"Smoothed image with multiple patches saved as {output_path}")
 
 # 使用示例
-background_path = "photo_processing/Background3.bmp"  # 替换为背景图片路径
+background_path = "photo_processing/Background.bmp"  # 替换为背景图片路径
 img_folder = "photo_processing/qipao3"  # 替换为包含小图片的文件夹路径
 add_multiple_patches_to_background(background_path, img_folder, num_patches=50)
