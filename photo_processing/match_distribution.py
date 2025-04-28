@@ -3,22 +3,6 @@ import cv2
 import numpy as np
 from scipy.stats import norm
 
-def get_edge_pixels(image):
-    """提取图像的边缘像素值"""
-    edges = cv2.Canny(image, 100, 200)  # 使用Canny边缘检测
-    edge_pixels = image[edges > 0]  # 提取边缘像素值
-    return edge_pixels
-
-def match_distribution(source_pixels, target_mean, target_std):
-    """将源像素值调整为目标高斯分布"""
-    source_mean = np.mean(source_pixels)
-    source_std = np.std(source_pixels)
-    # 标准化源像素值
-    normalized_pixels = (source_pixels - source_mean) / source_std
-    # 调整到目标分布
-    matched_pixels = normalized_pixels * target_std + target_mean
-    return np.clip(matched_pixels, 0, 255).astype(np.uint8)
-
 def calculate_average_distribution(input_folder):
     """计算所有图像边缘像素的高斯分布参数的平均值"""
     means = []
@@ -29,12 +13,41 @@ def calculate_average_distribution(input_folder):
             image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             edge_pixels = get_edge_pixels(image)
             if len(edge_pixels) > 0:  # 确保有边缘像素
-                means.append(np.mean(edge_pixels))
-                stds.append(np.std(edge_pixels))
+                mean = np.mean(edge_pixels)
+                std = np.std(edge_pixels)
+                means.append(mean)
+                stds.append(std)
+                print(f"图片: {filename}, 边缘像素均值: {mean:.2f}, 标准差: {std:.2f}")
     # 计算均值和标准差的平均值
     avg_mean = np.mean(means) if means else 0
     avg_std = np.mean(stds) if stds else 1  # 避免标准差为0
     return avg_mean, avg_std
+
+def get_edge_pixels(image):
+    """提取图像上下左右四个边缘的像素值"""
+    height, width = image.shape
+    # 上边缘和下边缘
+    top_edge = image[0, :]
+    bottom_edge = image[-1, :]
+    # 左边缘和右边缘
+    left_edge = image[:, 0]
+    right_edge = image[:, -1]
+    # 合并所有边缘像素
+    edge_pixels = np.concatenate([top_edge, bottom_edge, left_edge, right_edge])
+    return edge_pixels
+
+def match_distribution(image, edge_pixels, target_mean, target_std):
+    """将整张图片调整为目标高斯分布，但使边缘像素保持目标分布"""
+    source_mean = np.mean(edge_pixels)
+    source_std = np.std(edge_pixels)
+    if source_std == 0:  # 避免除以0
+        return image
+
+    # 标准化整张图片
+    normalized_image = (image - source_mean) / source_std
+    # 调整到目标分布
+    matched_image = normalized_image * target_std + target_mean
+    return np.clip(matched_image, 0, 255).astype(np.uint8)
 
 def process_images(input_folder, output_folder):
     """处理文件夹中的所有图片"""
@@ -53,13 +66,8 @@ def process_images(input_folder, output_folder):
             # 提取边缘像素值
             edge_pixels = get_edge_pixels(image)
             
-            # 调整边缘像素值分布
-            adjusted_edge_pixels = match_distribution(edge_pixels, target_mean, target_std)
-            
-            # 替换原图中的边缘像素值
-            edges = cv2.Canny(image, 100, 200)
-            adjusted_image = image.copy()
-            adjusted_image[edges > 0] = adjusted_edge_pixels
+            # 调整整张图片，使边缘像素保持目标分布
+            adjusted_image = match_distribution(image, edge_pixels, target_mean, target_std)
             
             # 保存处理后的图片
             output_path = os.path.join(output_folder, filename)
