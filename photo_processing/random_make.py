@@ -58,6 +58,6 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
     print(f"Smoothed image with multiple patches saved as {output_path}")
 
 # 使用示例
-background_path = "photo_processing/Background_dis.bmp"  # 替换为背景图片路径
-img_folder = "photo_processing/qipao"  # 替换为包含小图片的文件夹路径
+background_path = "photo_processing/Background3.bmp"  # 替换为背景图片路径
+img_folder = "photo_processing/qipao3"  # 替换为包含小图片的文件夹路径
 add_multiple_patches_to_background(background_path, img_folder, num_patches=50)

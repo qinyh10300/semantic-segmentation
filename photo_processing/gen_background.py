@@ -72,6 +72,6 @@ def process_images_and_generate_sample(img_folder, output_path, height=3648, wid
     print(f"生成的图像已保存到：{output_path}")
 
 # 使用示例
-img_folder = "photo_processing/qipao"  # 替换为包含图片的文件夹路径
-output_path = "photo_processing/Background.bmp"  # 替换为输出图像路径
+img_folder = "photo_processing/qipao3"  # 替换为包含图片的文件夹路径
+output_path = "photo_processing/Background3.bmp"  # 替换为输出图像路径
 process_images_and_generate_sample(img_folder, output_path)
