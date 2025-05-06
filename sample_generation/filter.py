@@ -37,6 +37,6 @@ def apply_gray_mask_with_fill(image_path, output_path, threshold):
 # 示例使用
 input_image_path = "sample_generation/output_with_multiple_patches_smoothed.bmp"  # 替换为输入图片路径
 output_image_path = "sample_generation/smoothed_filled.bmp"  # 替换为输出图片路径
-gray_threshold = 93  # 设置灰度阈值
+gray_threshold = 100  # 设置灰度阈值
 
 apply_gray_mask_with_fill(input_image_path, output_image_path, gray_threshold)

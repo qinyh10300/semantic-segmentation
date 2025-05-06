@@ -27,13 +27,16 @@ def blend_with_background(filtered_image_path, background_image_path, output_pat
     # 将过滤图片的纯黑色部分（像素值为0）替换为背景图片的对应像素值
     blended_image = np.where(filtered_image == 0, background_image, filtered_image)
 
+    # 对生成的图像进行平滑处理（高斯模糊）
+    blended_image = cv2.GaussianBlur(blended_image, (7, 7), 0)
+
     # 保存拼接后的图片
     cv2.imwrite(output_path, blended_image)
     print(f"拼接后的图片已保存到: {output_path}")
 
 # 示例使用
 filtered_image_path = "sample_generation/smoothed_filled.bmp"  # 替换为过滤后的图片路径
-background_image_path = "sample_generation/real_background.bmp"  # 替换为背景图片路径
+background_image_path = "sample_generation/Background.bmp"  # 替换为背景图片路径
 output_image_path = "sample_generation/blended_image.bmp"  # 替换为拼接后的图片保存路径
 
 blend_with_background(filtered_image_path, background_image_path, output_image_path)
