@@ -8,7 +8,7 @@ def calculate_average_distribution(input_folder):
     means = []
     stds = []
     for filename in os.listdir(input_folder):
-        if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
+        if filename.endswith(('.png')) and not filename.endswith(('_target.png')):
             filepath = os.path.join(input_folder, filename)
             image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             edge_pixels = get_edge_pixels(image)
@@ -59,7 +59,7 @@ def process_images(input_folder, output_folder):
     print(f"目标高斯分布参数: 均值={target_mean}, 标准差={target_std}")
 
     for filename in os.listdir(input_folder):
-        if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
+        if filename.endswith(('.png')) and not filename.endswith(('_target.png')):
             filepath = os.path.join(input_folder, filename)
             image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             
@@ -74,7 +74,7 @@ def process_images(input_folder, output_folder):
             cv2.imwrite(output_path, adjusted_image)
 
 # 主程序
-input_folder = "sample_generation/qipao"  # 替换为你的输入文件夹路径
-output_folder = "sample_generation/qipao_matched"  # 替换为你的输出文件夹路径
+input_folder = "sample_generation/qipao_data_final"  # 替换为你的输入文件夹路径
+output_folder = "sample_generation/qipao_final_matched"  # 替换为你的输出文件夹路径
 
 process_images(input_folder, output_folder)
