@@ -68,7 +68,8 @@ def process_images_and_generate_sample(img_folder, output_path, height=3648, wid
     generated_image = cv2.merge([B_sampled, G_sampled, R_sampled])
 
     # 保存生成的图像
-    cv2.imwrite(output_path, generated_image)
+    smoothed_background = cv2.GaussianBlur(generated_image, (15, 15), 0)
+    cv2.imwrite(output_path, smoothed_background)
     print(f"生成的图像已保存到：{output_path}")
 
 # 使用示例

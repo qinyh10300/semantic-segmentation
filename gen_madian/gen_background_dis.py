@@ -48,10 +48,11 @@ def process_images_and_generate_sample(img_folder, output_path, height=3648, wid
     generated_image = cv2.merge([R_sampled, R_sampled, R_sampled])
 
     # 保存生成的图像
-    cv2.imwrite(output_path, generated_image)
+    smoothed_background = cv2.GaussianBlur(generated_image, (15, 15), 0)
+    cv2.imwrite(output_path, smoothed_background)
     print(f"生成的图像已保存到：{output_path}")
 
 # 使用示例
-img_folder = "sample_generation_yuyan/yuyan_matched"  # 替换为包含图片的文件夹路径
-output_path = "sample_generation_yuyan/Background_dis.bmp"  # 替换为输出图像路径
+img_folder = "/home/qinyh/Downloads/madian_unmatched"  # 替换为包含图片的文件夹路径
+output_path = "gen_madian/Background_dis.bmp"  # 替换为输出图像路径
 process_images_and_generate_sample(img_folder, output_path)

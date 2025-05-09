@@ -29,7 +29,7 @@ def simulate_lighting(image_path, output_path, max_lights=10):
         # 随机生成光源参数
         light_center = (random.randint(0, width), random.randint(0, height))  # 光源中心
         print(f"光源位置: {light_center}")
-        light_intensity = random.uniform(10, 20)  # 光源强度
+        light_intensity = random.uniform(10, 30)  # 光源强度
         light_radius = random.uniform(500, 1500)  # 光源半径
 
         # 创建单个光源的光照掩模
@@ -48,7 +48,7 @@ def simulate_lighting(image_path, output_path, max_lights=10):
     print(f"模拟光线变化后的图片已保存到: {output_path}")
 
 # 示例使用
-input_image_path = "sample_generation_yuyan/blended_image.bmp"  # 替换为输入图片路径
-output_image_path = "sample_generation_yuyan/lighted_image_with_multiple_sources.bmp"  # 替换为输出图片路径
+input_image_path = "gen_madian/back.bmp"  # 替换为输入图片路径
+output_image_path = "gen_madian/output/back_lighted.bmp"  # 替换为输出图片路径
 
 simulate_lighting(input_image_path, output_image_path)
