@@ -36,7 +36,7 @@ def blend_with_background(filtered_image_path, background_image_path, output_pat
 
 # 示例使用
 filtered_image_path = "sample_generation_yuyan/smoothed_filled_with_morphology.bmp"  # 替换为过滤后的图片路径
-background_image_path = "sample_generation_yuyan/Background.bmp"  # 替换为背景图片路径
+background_image_path = "sample_generation_yuyan/back_larger.png"  # 替换为背景图片路径
 output_image_path = "sample_generation_yuyan/blended_image.bmp"  # 替换为拼接后的图片保存路径
 
 blend_with_background(filtered_image_path, background_image_path, output_image_path)

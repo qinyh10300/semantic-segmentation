@@ -58,6 +58,6 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
     print(f"Smoothed image with multiple patches saved as {output_path}")
 
 # 使用示例
-background_path = "sample_generation_yuyan/Background.bmp"  # 替换为背景图片路径
+background_path = "sample_generation_yuyan/back_larger.png"  # 替换为背景图片路径
 img_folder = "sample_generation_yuyan/yuyan_matched"  # 替换为包含小图片的文件夹路径
 add_multiple_patches_to_background(background_path, img_folder, num_patches=100)
