@@ -1,48 +1,97 @@
 import os
 import shutil
+import argparse
+from PIL import Image
 
-def rename_and_move_images(source_folder, target_folder):
-    # 确保目标文件夹存在
-    os.makedirs(target_folder, exist_ok=True)
+def process_images(input_folder, output_folder):
+    """
+    处理input文件夹中的图像文件，保存到output文件夹
+    
+    Args:
+        input_folder: 输入文件夹路径
+        output_folder: 输出文件夹路径
+    """
+    # 确保输出文件夹存在
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # 获取input文件夹中的所有文件
+    all_files = os.listdir(input_folder)
+    
+    source_images = []
+    for file in all_files:
+        filename, extension = os.path.splitext(file)
+        if extension.lower() in ['.png']:
+            if not filename.endswith('_pseudo'):
+                source_images.append(file)
+    
+    # 对文件名进行排序以确保一致的处理顺序
+    source_images.sort()
+    
+    # 处理计数
+    processed_count = 0
+    skipped_count = 0
+    
+    # 处理每个源图像
+    for index, source_file in enumerate(source_images, 1):
+        source_path = os.path.join(input_folder, source_file)
+        
+        # 获取源文件的文件名（不含扩展名）
+        filename, extension = os.path.splitext(source_file)
+        
+        # 构建对应的pseudo文件名
+        pseudo_filename = f"{filename}_pseudo{extension}"
+        pseudo_path = os.path.join(input_folder, pseudo_filename)
+        
+        # 检查对应的pseudo文件是否存在
+        if pseudo_filename not in all_files:
+            # 尝试其他可能的扩展名
+            alt_extensions = ['.png'] if extension.lower() in ['.png'] else []
+            found = False
+            for alt_ext in alt_extensions:
+                alt_pseudo_filename = f"{filename}_pseudo{alt_ext}"
+                alt_pseudo_path = os.path.join(input_folder, alt_pseudo_filename)
+                if alt_pseudo_filename in all_files:
+                    pseudo_filename = alt_pseudo_filename
+                    pseudo_path = alt_pseudo_path
+                    found = True
+                    break
+            
+            if not found:
+                print(f"警告: 找不到文件 {source_file} 对应的pseudo文件")
+                skipped_count += 1
+                continue
+        
+        # 构建目标文件路径
+        target_source_path = os.path.join(output_folder, f"madian_{index}.png")
+        target_pseudo_path = os.path.join(output_folder, f"madian_{index}_target.png")
+        
+        try:
+            # 转换并保存源图像
+            img_source = Image.open(source_path)
+            img_source.save(target_source_path)
+            
+            # 转换并保存pseudo图像
+            img_pseudo = Image.open(pseudo_path)
+            img_pseudo.save(target_pseudo_path)
+            
+            print(f"处理: {source_file} -> madian_{index}.png")
+            print(f"处理: {pseudo_filename} -> madian_{index}_target.png")
+            
+            processed_count += 1
+        except Exception as e:
+            print(f"处理文件 {source_file} 时出错: {e}")
+            skipped_count += 1
+    
+    print(f"\n处理完成! 成功处理: {processed_count} 对图像, 跳过: {skipped_count} 个文件")
 
-    # 获取源文件夹中所有以 .bmp 和 .png 结尾的文件
-    images = [f for f in os.listdir(source_folder) if f.lower().endswith(('.bmp', '.png'))]
+def main():
+    parser = argparse.ArgumentParser(description='处理图像文件并重命名')
+    parser.add_argument('--input_folder', type=str, default="/home/qinyh/Downloads/yuyan_raw", help='输入图像文件夹路径')
+    parser.add_argument('--output_folder', type=str, default="/home/qinyh/Downloads/yuyan_final", help='输出图像文件夹路径')
+    
+    args = parser.parse_args()
+    
+    process_images(args.input_folder, args.output_folder)
 
-    # 遍历图片并重命名
-    for index, image_name in enumerate(images, start=1):
-        # 构造新的文件名
-        base_name = os.path.splitext(image_name)[0]
-        new_name = f"{base_name}.png"
-        # 构造源文件和目标文件路径
-        source_path = os.path.join(source_folder, image_name)
-        target_path = os.path.join(target_folder, new_name)
-        # 复制并重命名文件
-        shutil.copy(source_path, target_path)
-        print(f"Renamed and moved: {source_path} -> {target_path}")
-
-def rename_and_move_pseudo_images(source_folder, target_folder):
-    # 确保目标文件夹存在
-    os.makedirs(target_folder, exist_ok=True)
-
-    # 获取源文件夹中所有以 _pseudo.png 结尾的文件
-    images = [f for f in os.listdir(source_folder) if f.lower().endswith('_pseudo.png')]
-
-    # 遍历图片并重命名
-    for index, image_name in enumerate(images, start=1):
-        # 构造新的文件名
-        new_name = f"{image_name}"
-        # 构造源文件和目标文件路径
-        source_path = os.path.join(source_folder, image_name)
-        target_path = os.path.join(target_folder, new_name)
-        # 复制并重命名文件
-        shutil.copy(source_path, target_path)
-        print(f"Renamed and moved: {source_path} -> {target_path}")
-
-# 示例用法
-source_folder = "sample_generation/qipao"
-target_folder = "sample_generation/raw_data_qipao"
-rename_and_move_images(source_folder, target_folder)
-
-pseudo_source_folder = "sample_generation/qipao/label"
-pseudo_target_folder = "sample_generation/raw_data_qipao"
-rename_and_move_pseudo_images(pseudo_source_folder, pseudo_target_folder)
+if __name__ == "__main__":
+    main()
