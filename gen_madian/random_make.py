@@ -42,8 +42,9 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
             base_name = os.path.splitext(os.path.basename(img_path))[0]
             # print(base_name)
             target_file = os.path.join(img_folder, f"{base_name}_target.png")
+            target_file_2 = os.path.join(img_folder, f"{base_name}_target_process.png")
 
-            target_mask = cv2.imread(target_file)
+            target_mask = cv2.imread(target_file_2)
             
             if target_mask is None:
                 print(f"无法读取对应的target图像：{target_file}")
