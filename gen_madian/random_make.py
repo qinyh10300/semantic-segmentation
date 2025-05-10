@@ -2,43 +2,24 @@ import cv2
 import os
 import random
 import numpy as np
+import time
+import argparse
+from datetime import datetime
 
-def add_multiple_patches_to_background(background_path, img_folder, num_patches=5, output_dir="gen_madian/output"):
-    """
-    将多个图像补丁添加到背景图像，并根据对应的目标掩码确定哪些像素需要被保留
-    
-    :param background_path: 背景图像的路径
-    :param img_folder: 包含补丁图像的文件夹路径
-    :param num_patches: 要添加的补丁数量
-    :param output_dir: 输出目录
-    """
-    # 确保输出目录存在
-    os.makedirs(output_dir, exist_ok=True)
-    
+def add_multiple_patches_to_background(background_path, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
     background = cv2.imread(background_path)
 
     # 获取背景图片的大小
     bg_height, bg_width, _ = background.shape
-
-    # 获取文件夹中的所有图片路径（不包括target图像）
-    img_files = []
-    target_files = {}
     
-    # 遍历文件夹获取匹配的图像对
-    for file in os.listdir(img_folder):
-        if file.endswith('.png') and '_target_process.png' not in file:
-            # 构建对应的target文件名
-            base_name = os.path.splitext(file)[0]
-            target_file = f"{base_name}_target_process.png"
-            target_path = os.path.join(img_folder, target_file)
-            
-            # 检查target文件是否存在
-            if os.path.exists(target_path):
-                img_files.append(os.path.join(img_folder, file))
-                target_files[os.path.join(img_folder, file)] = target_path
+    # 创建一个全黑的目标掩码图像
+    target_mask_all = np.zeros((bg_height, bg_width, 3), dtype=np.uint8)
+
+    # 获取文件夹中的所有图片路径（不包括_target.png）
+    img_files = [os.path.join(img_folder, f) for f in os.listdir(img_folder) if f.endswith(('.png')) and not f.endswith(('_target.png', '_process.png'))]
 
     if not img_files:
-        print(f"文件夹 {img_folder} 中没有找到有效的图像对！")
+        print(f"文件夹 {img_folder} 中没有找到图片！")
         return
 
     # 存储已放置的区域
@@ -57,22 +38,31 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
             img_path = random.choice(img_files)
             img = cv2.imread(img_path)
 
-            if img is None:
-                print(f"无法读取图片：{img_path}")
-                continue
-                
-            # 读取对应的target掩码图像
-            target_path = target_files[img_path]
-            target_mask = cv2.imread(target_path)
-            # print(target_path, img_path)
+            # 获取对应的_target.png文件路径
+            base_name = os.path.splitext(os.path.basename(img_path))[0]
+            # print(base_name)
+            target_file = os.path.join(img_folder, f"{base_name}_target.png")
+
+            target_mask = cv2.imread(target_file)
             
             if target_mask is None:
-                print(f"无法读取对应的target图像：{target_path}")
+                print(f"无法读取对应的target图像：{target_file}")
                 continue
                 
             # 确保图像和掩码大小相同
             if img.shape != target_mask.shape:
-                print(f"图像和掩码大小不一致: {img_path}, {target_path}")
+                print(f"图像和掩码大小不一致: {img_path}, {target_file}")
+                continue
+            
+            # 检查对应的目标文件是否存在
+            if not os.path.exists(target_file):
+                print(f"警告：未找到对应的目标文件： {target_file}")
+                continue
+                
+            target_img = cv2.imread(target_file)
+
+            if img is None or target_img is None:
+                print(f"无法读取图片：{img_path} 或 {target_file}")
                 continue
 
             img_height, img_width, _ = img.shape
@@ -108,37 +98,60 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
                 
                 # 将修改后的区域放回背景
                 background[random_y:random_y + img_height, random_x:random_x + img_width] = bg_patch
+                # # 放置小图片到背景上
+                # background[random_y:random_y + img_height, random_x:random_x + img_width] = img
+                # 放置对应的目标图片到黑色掩码图上
+                target_mask_all[random_y:random_y + img_height, random_x:random_x + img_width] = target_img
                 placed_regions.append((random_x, random_y, img_width, img_height))
                 break
-                
-    # 保存结果图像
-    output_path = os.path.join(output_dir, "output_with_multiple_patches.bmp")
-    cv2.imwrite(output_path, background)
+
+    # 确保输出目录存在
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(output_target_dir, exist_ok=True)
     
+    # 使用当前时间戳作为文件名，精确到毫秒
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    output_path = os.path.join(output_dir, f"{timestamp}_qipao.png")
+    target_output_path = os.path.join(output_target_dir, f"{timestamp}_qipao_target.png")
+
     # 对生成的图像进行平滑处理（高斯模糊）
-    smoothed_background = cv2.GaussianBlur(background, (5, 5), 0)
+    smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
     
-    # 保存平滑处理后的图像
-    output_path_smoothed = os.path.join(output_dir, "output_with_multiple_patches_smoothed.bmp")
-    cv2.imwrite(output_path_smoothed, smoothed_background)
-    
+    cv2.imwrite(output_path, smoothed_background)
+    cv2.imwrite(target_output_path, target_mask_all)
     print(f"图像已保存为 {output_path}")
-    print(f"平滑处理后的图像已保存为 {output_path_smoothed}")
-    
-    return output_path, output_path_smoothed
+    print(f"目标掩码已保存为 {target_output_path}")
+    return output_path, target_output_path
 
 def main():
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='将多个图像补丁添加到背景图像')
-    parser.add_argument('--background', type=str, default="gen_madian/output/back_lighted.bmp", help='背景图像路径')
-    parser.add_argument('--img_folder', type=str, default="/home/qinyh/Downloads/madian_final", help='包含图像补丁的文件夹路径')
-    parser.add_argument('--num_patches', type=int, default=100, help='要添加的补丁数量')
-    parser.add_argument('--output_dir', type=str, default="gen_madian/output", help='输出目录')
+    parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
+    parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
+    parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
+    parser.add_argument('--background', type=str, default="gen_madian/back.bmp", help='背景图像路径')
+    parser.add_argument('--img_folder', type=str, default="/home/qinyh/Downloads/madian_final", help='气泡图像文件夹路径')
+    parser.add_argument('--output_dir', type=str, default="/home/qinyh/Downloads/madian_output", help='输出目录')
+    parser.add_argument('--output_target_dir', type=str, default="/home/qinyh/Downloads/madian_target", help='输出目标目录')
     
     args = parser.parse_args()
     
-    add_multiple_patches_to_background(args.background, args.img_folder, args.num_patches, args.output_dir)
+    generated_files = []
+    generated_targets = []
+    for i in range(args.runs):
+        print(f"正在生成第 {i+1}/{args.runs} 张图像...")
+        output_path, target_path = add_multiple_patches_to_background(
+            args.background, 
+            args.img_folder, 
+            num_patches=args.patches,
+            output_dir=args.output_dir,
+            output_target_dir=args.output_target_dir,
+        )
+        generated_files.append(output_path)
+        generated_targets.append(target_path)
+    
+    print(f"已成功生成 {len(generated_files)} 对图像:")
+    for img_path, target_path in zip(generated_files, generated_targets):
+        print(f"  - 图像: {img_path}")
+        print(f"  - 目标: {target_path}")
 
 if __name__ == "__main__":
     main()
