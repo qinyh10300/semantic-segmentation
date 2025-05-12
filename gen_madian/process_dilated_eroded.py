@@ -21,13 +21,10 @@ def process_target_image(image_path, kernel_size=5, iterations=2):
         print(f"无法读取图像: {image_path}")
         return None
     
-    # 定义橙色范围 (BGR格式)
-    # 橙色在BGR中大致为[0-50, 120-200, 220-255]
-    lower_orange = np.array([5, 5, 5])
-    upper_orange = np.array([255, 255, 255])
-    
-    # 创建橙色掩模
-    orange_mask = cv2.inRange(image, lower_orange, upper_orange)
+    # 创建掩膜：任意通道大于10的像素被保留
+    orange_mask = np.zeros(image.shape[:2], dtype=np.uint8)
+    # 检查每个通道是否有值大于10，用逻辑或组合
+    orange_mask[(image[:,:,0] > 10) | (image[:,:,1] > 10) | (image[:,:,2] > 10)] = 255
 
     # cv2.imshow("Orange Mask", orange_mask)
     # cv2.waitKey(0)
@@ -100,7 +97,7 @@ def process_folder(input_folder, kernel_size=5, iterations=2):
 
 def main():
     parser = argparse.ArgumentParser(description='处理target.png图像，提取橙色部分并进行形态学操作')
-    parser.add_argument('--input_folder', type=str, default="/home/qinyh/Downloads/madian_final", help='输入图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/madian_data", help='输入图像文件夹路径')
     parser.add_argument('--kernel_size', type=int, default=5, help='形态学操作的核大小')
     parser.add_argument('--iterations', type=int, default=2, help='腐蚀和膨胀的迭代次数')
     

@@ -129,9 +129,9 @@ def main():
     parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
     parser.add_argument('--background', type=str, default="gen_madian/back.bmp", help='背景图像路径')
-    parser.add_argument('--img_folder', type=str, default="/home/qinyh/Downloads/madian_final", help='气泡图像文件夹路径')
-    parser.add_argument('--output_dir', type=str, default="/home/qinyh/Downloads/madian_output", help='输出目录')
-    parser.add_argument('--output_target_dir', type=str, default="/home/qinyh/Downloads/madian_target", help='输出目标目录')
+    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/madian_data", help='气泡图像文件夹路径')
+    parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_random_make", help='输出目录')
+    parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_target", help='输出目标目录')
     
     args = parser.parse_args()
     
