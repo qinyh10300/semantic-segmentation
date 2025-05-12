@@ -112,8 +112,8 @@ def add_multiple_patches_to_background(background_path, img_folder, num_patches=
     
     # 使用当前时间戳作为文件名，精确到毫秒
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    output_path = os.path.join(output_dir, f"{timestamp}_qipao.png")
-    target_output_path = os.path.join(output_target_dir, f"{timestamp}_qipao_target.png")
+    output_path = os.path.join(output_dir, f"{timestamp}_yuyan.png")
+    target_output_path = os.path.join(output_target_dir, f"{timestamp}_yuyan_target.png")
 
     # 对生成的图像进行平滑处理（高斯模糊）
     smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
@@ -129,9 +129,9 @@ def main():
     parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
     parser.add_argument('--background', type=str, default="gen_yuyan_ver2/Background/back_meta_resized.png", help='背景图像路径')
-    parser.add_argument('--img_folder', type=str, default="/home/qinyh/Downloads/yuyan_final", help='气泡图像文件夹路径')
-    parser.add_argument('--output_dir', type=str, default="/home/qinyh/Downloads/yuyan_output2", help='输出目录')
-    parser.add_argument('--output_target_dir', type=str, default="/home/qinyh/Downloads/yuyan_target2", help='输出目标目录')
+    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/yuyan_data", help='气泡图像文件夹路径')
+    parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_random_make", help='输出目录')
+    parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_target", help='输出目标目录')
     
     args = parser.parse_args()
     

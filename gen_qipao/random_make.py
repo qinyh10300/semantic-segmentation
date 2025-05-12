@@ -88,7 +88,7 @@ def main():
     parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
     parser.add_argument('--background', type=str, default="gen_qipao/Background.bmp", help='背景图像路径')
-    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/data/qipao_data_matched", help='气泡图像文件夹路径')
+    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/qipao_data_matched", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_target", help='输出目标目录')
     
