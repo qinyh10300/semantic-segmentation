@@ -179,6 +179,7 @@ def main():
             num_patches=args.patches,
             output_dir=args.output_dir,
             output_target_dir=args.output_target_dir,
+            index=i,
         )
         if output_path and target_path:
             generated_files.append(output_path)
