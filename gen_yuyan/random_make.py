@@ -6,8 +6,24 @@ import time
 import argparse
 from datetime import datetime
 
-def add_multiple_patches_to_background(background_path, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
+def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
+    # 获取背景文件夹中的所有图片路径
+    background_files = [os.path.join(background_dir, f) for f in os.listdir(background_dir) 
+                      if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+
+    if not background_files:
+        print(f"文件夹 {background_dir} 中没有找到背景图片！")
+        return None, None
+
+    # 随机选择一张背景图片
+    background_path = random.choice(background_files)
     background = cv2.imread(background_path)
+    
+    if background is None:
+        print(f"无法读取背景图片：{background_path}")
+        return None, None
+
+    print(f"已选择背景图片: {os.path.basename(background_path)}")
 
     # 获取背景图片的大小
     bg_height, bg_width, _ = background.shape
@@ -128,19 +144,24 @@ def main():
     parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
     parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
-    parser.add_argument('--background', type=str, default="gen_yuyan_ver2/Background/back_meta_resized.png", help='背景图像路径')
+    parser.add_argument('--background_dir', type=str, default="gen_yuyan_ver2/Background/back_meta_resized.png", help='背景图像路径')
     parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/yuyan_data", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_target", help='输出目标目录')
     
     args = parser.parse_args()
+
+    # 确保背景目录存在
+    if not os.path.exists(args.background_dir):
+        print(f"错误: 背景图片目录 '{args.background_dir}' 不存在！")
+        return
     
     generated_files = []
     generated_targets = []
     for i in range(args.runs):
         print(f"正在生成第 {i+1}/{args.runs} 张图像...")
         output_path, target_path = add_multiple_patches_to_background(
-            args.background, 
+            args.background_dir, 
             args.img_folder, 
             num_patches=args.patches,
             output_dir=args.output_dir,

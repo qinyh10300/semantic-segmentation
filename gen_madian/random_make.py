@@ -24,7 +24,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
         print(f"无法读取背景图片：{background_path}")
         return None, None
 
-    # print(f"已选择背景图片: {os.path.basename(background_path)}")
+    print(f"已选择背景图片: {os.path.basename(background_path)}")
 
     # 获取背景图片的大小
     bg_height, bg_width, _ = background.shape
@@ -50,14 +50,17 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
         return False
 
     for _ in range(num_patches):
-        # 随机选择一张背景图片
-        background_path = random.choice(background_files)
-        background = cv2.imread(background_path)
-        if background is None:
-            print(f"无法读取背景图片：{background_path}")
-            return None, None
-        print(f"已选择背景图片: {os.path.basename(background_path)}")
-        for _ in range(100):  # 尝试最多100次找到一个不重叠的位置            
+        for _ in range(100):  # 尝试最多100次找到一个不重叠的位置
+            # 随机选择一张背景图片
+            background_path = random.choice(background_files)
+            background = cv2.imread(background_path)
+            
+            if background is None:
+                print(f"无法读取背景图片：{background_path}")
+                return None, None
+
+            print(f"已选择背景图片: {os.path.basename(background_path)}")
+            
             # 随机选择一张图片
             img_path = random.choice(img_files)
             img = cv2.imread(img_path)
