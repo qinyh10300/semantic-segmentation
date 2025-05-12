@@ -80,9 +80,9 @@ def process_folder(input_folder, background_image_path, output_folder):
 
 def main():
     parser = argparse.ArgumentParser(description='将过滤后的图片与背景图片进行拼接')
-    parser.add_argument('--input_folder', type=str, default="gen_qipao/output/output_filter", help='输入图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_filter", help='输入图像文件夹路径')
     parser.add_argument('--background', type=str, default="gen_qipao/Background.bmp", help='背景图像路径')
-    parser.add_argument('--output_folder', type=str, default="gen_qipao/output/output_blend", help='输出图像文件夹路径')
+    parser.add_argument('--output_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_blend", help='输出图像文件夹路径')
     
     args = parser.parse_args()
     

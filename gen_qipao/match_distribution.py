@@ -74,7 +74,7 @@ def process_images(input_folder, output_folder):
             cv2.imwrite(output_path, adjusted_image)
 
 # 主程序
-input_folder = "gen_qipao/qipao_data_final"  # 替换为你的输入文件夹路径
-output_folder = "gen_qipao/qipao_final_matched"  # 替换为你的输出文件夹路径
+input_folder = "/media/qinyh/KINGSTON/data/qipao_data"  # 替换为你的输入文件夹路径
+output_folder = "/media/qinyh/KINGSTON/data/qipao_data_2"  # 替换为你的输出文件夹路径
 
 process_images(input_folder, output_folder)

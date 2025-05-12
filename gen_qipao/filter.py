@@ -82,8 +82,8 @@ def process_folder(input_folder, output_folder, lower_threshold, upper_threshold
 
 def main():
     parser = argparse.ArgumentParser(description='对文件夹中的所有图像应用灰度掩模和填充')
-    parser.add_argument('--input_folder', type=str, default="gen_qipao/output/output", help='输入图像文件夹路径')
-    parser.add_argument('--output_folder', type=str, default="gen_qipao/output/output_filter", help='输出图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_random_make", help='输入图像文件夹路径')
+    parser.add_argument('--output_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_filter", help='输出图像文件夹路径')
     parser.add_argument('--lower_threshold', type=int, default=80, help='灰度下限阈值')
     parser.add_argument('--upper_threshold', type=int, default=100, help='灰度上限阈值')
     
