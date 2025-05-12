@@ -31,7 +31,7 @@ def simulate_lighting(image_path, output_path, max_lights=10):
     for _ in range(num_lights):
         # 随机生成光源参数
         light_center = (random.randint(0, width), random.randint(0, height))  # 光源中心
-        light_intensity = random.uniform(10, 30)  # 光源强度
+        light_intensity = random.uniform(10, 20)  # 光源强度
         light_radius = random.uniform(500, 1500)  # 光源半径
 
         # 创建单个光源的光照掩模
@@ -92,8 +92,8 @@ def process_folder(input_folder, output_folder, max_lights=10):
 
 def main():
     parser = argparse.ArgumentParser(description='对图像应用光照效果模拟')
-    parser.add_argument('--input_folder', type=str, default="/home/qinyh/Downloads/yuyan_blend", help='输入图像文件夹路径')
-    parser.add_argument('--output_folder', type=str, default="/home/qinyh/Downloads/yuyan_light", help='输出图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_random_make", help='输入图像文件夹路径')
+    parser.add_argument('--output_folder', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_light", help='输出图像文件夹路径')
     parser.add_argument('--max_lights', type=int, default=10, help='最大光源数量')
     
     args = parser.parse_args()

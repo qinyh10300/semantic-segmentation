@@ -20,25 +20,6 @@ def process_target_image(image_path, kernel_size=5, iterations=2):
     if image is None:
         print(f"无法读取图像: {image_path}")
         return None
-    
-    # # 定义橙色范围 (BGR格式)
-    # # 橙色在BGR中大致为[0-50, 120-200, 220-255]
-    # lower_orange = np.array([5, 5, 5])
-    # upper_orange = np.array([255, 255, 255])
-    
-    # # 创建橙色掩模
-    # orange_mask = cv2.inRange(image, lower_orange, upper_orange)
-
-    # # 将图像转换到HSV颜色空间
-    # hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
-    # # 定义黄色范围 (HSV格式)
-    # # 黄色在HSV中大致为H: 20-40, S: 100-255, V: 100-255
-    # lower_yellow = np.array([20, 100, 100])
-    # upper_yellow = np.array([40, 255, 255])
-
-    # # 创建黄色掩模
-    # orange_mask = cv2.inRange(hsv_img, lower_yellow, upper_yellow)
 
     # 创建掩膜：任意通道大于10的像素被保留
     orange_mask = np.zeros(image.shape[:2], dtype=np.uint8)
