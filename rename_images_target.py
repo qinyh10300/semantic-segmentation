@@ -32,6 +32,7 @@ def process_images(input_folder, output_folder):
     skipped_count = 0
     
     # 处理每个源图像
+    start_index = 64
     for index, source_file in enumerate(source_images, 1):
         source_path = os.path.join(input_folder, source_file)
         
@@ -62,8 +63,8 @@ def process_images(input_folder, output_folder):
                 continue
         
         # 构建目标文件路径
-        target_source_path = os.path.join(output_folder, f"madian_{index}.png")
-        target_pseudo_path = os.path.join(output_folder, f"madian_{index}_target.png")
+        target_source_path = os.path.join(output_folder, f"qipao_{start_index+index}.png")
+        target_pseudo_path = os.path.join(output_folder, f"qipao_{start_index+index}_target.png")
         
         try:
             # 转换并保存源图像
@@ -74,8 +75,8 @@ def process_images(input_folder, output_folder):
             img_pseudo = Image.open(pseudo_path)
             img_pseudo.save(target_pseudo_path)
             
-            print(f"处理: {source_file} -> madian_{index}.png")
-            print(f"处理: {pseudo_filename} -> madian_{index}_target.png")
+            print(f"处理: {source_file} -> madian_{start_index+index}.png")
+            print(f"处理: {pseudo_filename} -> madian_{start_index+index}_target.png")
             
             processed_count += 1
         except Exception as e:
@@ -86,8 +87,8 @@ def process_images(input_folder, output_folder):
 
 def main():
     parser = argparse.ArgumentParser(description='处理图像文件并重命名')
-    parser.add_argument('--input_folder', type=str, default="/home/qinyh/Downloads/yuyan_raw", help='输入图像文件夹路径')
-    parser.add_argument('--output_folder', type=str, default="/home/qinyh/Downloads/yuyan_final", help='输出图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/qipao_change_extension", help='输入图像文件夹路径')
+    parser.add_argument('--output_folder', type=str, default="/media/qinyh/KINGSTON/qipao_data", help='输出图像文件夹路径')
     
     args = parser.parse_args()
     
