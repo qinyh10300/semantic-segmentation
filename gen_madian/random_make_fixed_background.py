@@ -5,26 +5,9 @@ import numpy as np
 import time
 import argparse
 from datetime import datetime
-from pathlib import Path
 
-def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
-    # 获取背景文件夹中的所有图片路径
-    background_files = [os.path.join(background_dir, f) for f in os.listdir(background_dir) 
-                      if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
-
-    if not background_files:
-        print(f"文件夹 {background_dir} 中没有找到背景图片！")
-        return None, None
-
-    # 随机选择一张背景图片
-    background_path = random.choice(background_files)
+def add_multiple_patches_to_background(background_path, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
     background = cv2.imread(background_path)
-    
-    if background is None:
-        print(f"无法读取背景图片：{background_path}")
-        return None, None
-
-    # print(f"已选择背景图片: {os.path.basename(background_path)}")
 
     # 获取背景图片的大小
     bg_height, bg_width, _ = background.shape
@@ -37,7 +20,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
 
     if not img_files:
         print(f"文件夹 {img_folder} 中没有找到图片！")
-        return None, None
+        return
 
     # 存储已放置的区域
     placed_regions = []
@@ -50,14 +33,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
         return False
 
     for _ in range(num_patches):
-        # 随机选择一张背景图片
-        background_path = random.choice(background_files)
-        background = cv2.imread(background_path)
-        if background is None:
-            print(f"无法读取背景图片：{background_path}")
-            return None, None
-        print(f"已选择背景图片: {os.path.basename(background_path)}")
-        for _ in range(100):  # 尝试最多100次找到一个不重叠的位置            
+        for _ in range(100):  # 尝试最多100次找到一个不重叠的位置
             # 随机选择一张图片
             img_path = random.choice(img_files)
             img = cv2.imread(img_path)
@@ -123,7 +99,8 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
                 
                 # 将修改后的区域放回背景
                 background[random_y:random_y + img_height, random_x:random_x + img_width] = bg_patch
-                
+                # # 放置小图片到背景上
+                # background[random_y:random_y + img_height, random_x:random_x + img_width] = img
                 # 放置对应的目标图片到黑色掩码图上
                 target_mask_all[random_y:random_y + img_height, random_x:random_x + img_width] = target_img
                 placed_regions.append((random_x, random_y, img_width, img_height))
@@ -135,11 +112,8 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     
     # 使用当前时间戳作为文件名，精确到毫秒
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    
-    # 添加背景文件名到输出文件名
-    bg_filename = Path(background_path).stem
-    output_path = os.path.join(output_dir, f"{timestamp}_{bg_filename}_qipao.png")
-    target_output_path = os.path.join(output_target_dir, f"{timestamp}_{bg_filename}_qipao_target.png")
+    output_path = os.path.join(output_dir, f"{timestamp}_qipao.png")
+    target_output_path = os.path.join(output_target_dir, f"{timestamp}_qipao_target.png")
 
     # 对生成的图像进行平滑处理（高斯模糊）
     smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
@@ -154,32 +128,26 @@ def main():
     parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
     parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
-    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized", help='背景图像文件夹路径')
+    parser.add_argument('--background', type=str, default="gen_madian/back.bmp", help='背景图像路径')
     parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/madian_data", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_target", help='输出目标目录')
     
     args = parser.parse_args()
     
-    # 确保背景目录存在
-    if not os.path.exists(args.background_dir):
-        print(f"错误: 背景图片目录 '{args.background_dir}' 不存在！")
-        return
-    
     generated_files = []
     generated_targets = []
     for i in range(args.runs):
         print(f"正在生成第 {i+1}/{args.runs} 张图像...")
         output_path, target_path = add_multiple_patches_to_background(
-            args.background_dir, 
+            args.background, 
             args.img_folder, 
             num_patches=args.patches,
             output_dir=args.output_dir,
             output_target_dir=args.output_target_dir,
         )
-        if output_path and target_path:
-            generated_files.append(output_path)
-            generated_targets.append(target_path)
+        generated_files.append(output_path)
+        generated_targets.append(target_path)
     
     print(f"已成功生成 {len(generated_files)} 对图像:")
     for img_path, target_path in zip(generated_files, generated_targets):
