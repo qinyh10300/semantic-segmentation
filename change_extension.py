@@ -63,8 +63,8 @@ def convert_to_png(input_folder, output_folder=None, delete_original=False):
 
 def main():
     parser = argparse.ArgumentParser(description='将文件夹中的图片转换为PNG格式')
-    parser.add_argument('-i', '--input', default="/media/qinyh/KINGSTON/qipao_changed", help='输入文件夹路径')
-    parser.add_argument('-o', '--output', default="/media/qinyh/KINGSTON/qipao_change_extension", help='输出文件夹路径 (默认与输入相同)')
+    parser.add_argument('-i', '--input', default="/media/qinyh/KINGSTON1/liugua_output_bmp", help='输入文件夹路径')
+    parser.add_argument('-o', '--output', default="/media/qinyh/KINGSTON1/liugua_output2", help='输出文件夹路径 (默认与输入相同)')
     parser.add_argument('-d', '--delete', action='store_true', help='转换后删除原始文件')
     
     args = parser.parse_args()

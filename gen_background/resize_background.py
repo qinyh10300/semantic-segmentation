@@ -84,8 +84,8 @@ def resize_folder(input_folder, output_folder, target_width, target_height, inte
 
 def main():
     parser = argparse.ArgumentParser(description='将图像缩放到指定分辨率')
-    parser.add_argument('-i', '--input', default="/media/qinyh/KINGSTON/MetaData/background_data", help='输入图像路径或文件夹')
-    parser.add_argument('-o', '--output', default="/media/qinyh/KINGSTON/MetaData/background_data_resized", help='输出图像路径或文件夹 (单个文件时默认在原文件名后添加 _resized)')
+    parser.add_argument('-i', '--input', default="/media/qinyh/KINGSTON/无缺陷样本/无缺陷/麻点", help='输入图像路径或文件夹')
+    parser.add_argument('-o', '--output', default="/media/qinyh/KINGSTON/MetaData/background_data_resized/madian", help='输出图像路径或文件夹 (单个文件时默认在原文件名后添加 _resized)')
     parser.add_argument('-w', '--width', type=int, default=5472, help='目标宽度')
     parser.add_argument('--height', type=int, default=3648, help='目标高度')
     parser.add_argument('--method', type=str, default='linear', 
