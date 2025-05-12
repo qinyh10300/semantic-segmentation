@@ -69,13 +69,17 @@ def copy_images(source_folders, destination_folder, image_extensions=None, verbo
         print(f"所有文件已复制到: {destination_folder}")
 
 def main():
-    parser = argparse.ArgumentParser(description='将多个文件夹中的图片复制到目标文件夹')
-    parser.add_argument('-s', '--sources', required=True, nargs='+', help='源文件夹路径列表')
-    parser.add_argument('-d', '--destination', required=True, help='目标文件夹路径')
+    parser = argparse.ArgumentParser(description='将两个文件夹中的图片复制到目标文件夹')
+    parser.add_argument('-s1', '--source1', default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_light", help='第一个源文件夹路径')
+    parser.add_argument('-s2', '--source2', default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_target", help='第二个源文件夹路径')
+    parser.add_argument('-d', '--destination', default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_add", help='目标文件夹路径')
     parser.add_argument('-e', '--extensions', nargs='+', help='要复制的文件扩展名 (默认: 常见图片格式)')
     parser.add_argument('-q', '--quiet', action='store_true', help='不显示详细信息')
     
     args = parser.parse_args()
+    
+    # 将两个源文件夹组合成列表
+    source_folders = [args.source1, args.source2]
     
     # 处理扩展名
     extensions = args.extensions
@@ -83,7 +87,7 @@ def main():
         # 确保扩展名以点开头
         extensions = [ext if ext.startswith('.') else f'.{ext}' for ext in extensions]
     
-    copy_images(args.sources, args.destination, extensions, not args.quiet)
+    copy_images(source_folders, args.destination, extensions, not args.quiet)
 
 if __name__ == "__main__":
     main()
