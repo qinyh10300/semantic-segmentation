@@ -167,7 +167,7 @@ def main():
     parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/madian_data", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/madian/madian_target", help='输出目标目录')
-    parser.add_argument('-i', '--index', type=int, default=0, help='开始索引')
+    parser.add_argument('-i', '--index', type=int, default=16, help='开始索引')
 
     args = parser.parse_args()
     
@@ -179,13 +179,15 @@ def main():
     generated_files = []
     generated_targets = []
     for i in range(args.runs):
-        print(f"正在生成第 {i+1}/{args.runs} 张图像...")
-        if i < 200:
+        print(f"正在生成第 {i+args.index+1}/{args.runs} 张图像...")
+        if i + args.index < 200:
             args.patches = random.randint(5, 10)   # 少量
-        elif i < 600:
+        elif i + args.index < 600:
             args.patches = random.randint(10, 35)   # 中等
-        else:
+        elif i + args.index < 1000:  # 因为args.runs=1000，所以这里的条件是i + args.index < 1000
             args.patches = random.randint(35, 50)   # 大量
+        else:
+            break
 
         output_path, target_path = add_multiple_patches_to_background(
             args.background_dir, 
