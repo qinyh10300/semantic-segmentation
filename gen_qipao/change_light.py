@@ -93,7 +93,7 @@ def process_folder(input_folder, output_folder, max_lights=10):
 
 def main():
     parser = argparse.ArgumentParser(description='对图像应用光照效果模拟')
-    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_blend", help='输入图像文件夹路径')
+    parser.add_argument('--input_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_random_make", help='输入图像文件夹路径')
     parser.add_argument('--output_folder', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_light", help='输出图像文件夹路径')
     parser.add_argument('--max_lights', type=int, default=10, help='最大光源数量')
     
