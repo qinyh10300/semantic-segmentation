@@ -6,7 +6,9 @@ import time
 import argparse
 from datetime import datetime
 
-def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5, output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target"):
+def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5, 
+                                       output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target",
+                                       index=0):
     # 获取背景文件夹中的所有图片路径
     background_files = [os.path.join(background_dir, f) for f in os.listdir(background_dir) 
                       if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
@@ -126,10 +128,14 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(output_target_dir, exist_ok=True)
     
-    # 使用当前时间戳作为文件名，精确到毫秒
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    output_path = os.path.join(output_dir, f"{timestamp}_yuyan.png")
-    target_output_path = os.path.join(output_target_dir, f"{timestamp}_yuyan_target.png")
+    # # 使用当前时间戳作为文件名，精确到毫秒
+    # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    # output_path = os.path.join(output_dir, f"{timestamp}_yuyan.png")
+    # target_output_path = os.path.join(output_target_dir, f"{timestamp}_yuyan_target.png")
+
+    # 使用索引作为文件名
+    output_path = os.path.join(output_dir, f"yuyan_{index}.png")
+    target_output_path = os.path.join(output_target_dir, f"yuyan_target_{index}.png")
 
     # 对生成的图像进行平滑处理（高斯模糊）
     smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
@@ -142,12 +148,13 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
 
 def main():
     parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
-    parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
+    parser.add_argument('--runs', type=int, default=1000, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
-    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized", help='背景图像路径')
+    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized/yuyan", help='背景图像路径')
     parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/yuyan_data", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_target", help='输出目标目录')
+    parser.add_argument('-i', '--index', type=int, default=0, help='开始索引')
     
     args = parser.parse_args()
 
@@ -160,12 +167,20 @@ def main():
     generated_targets = []
     for i in range(args.runs):
         print(f"正在生成第 {i+1}/{args.runs} 张图像...")
+        if i < 200:
+            args.patches = random.randint(5, 10)   # 少量
+        elif i < 600:
+            args.patches = random.randint(10, 35)   # 中等
+        else:
+            args.patches = random.randint(35, 50)   # 大量
+
         output_path, target_path = add_multiple_patches_to_background(
             args.background_dir, 
             args.img_folder, 
             num_patches=args.patches,
             output_dir=args.output_dir,
             output_target_dir=args.output_target_dir,
+            index=args.index + i
         )
         generated_files.append(output_path)
         generated_targets.append(target_path)
