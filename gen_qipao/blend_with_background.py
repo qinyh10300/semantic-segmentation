@@ -64,7 +64,8 @@ def process_folder(input_folder, background_image_path, output_folder):
         
         # 生成输出文件名（在原文件名的扩展名前添加_blend）
         filename, ext = os.path.splitext(image_file)
-        output_filename = f"{filename}_blend{ext}"
+        # output_filename = f"{filename}_blend{ext}"
+        output_filename = f"{filename}{ext}"
         output_path = os.path.join(output_folder, output_filename)
         
         print(f"正在处理: {input_path}")

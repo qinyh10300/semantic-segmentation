@@ -66,7 +66,8 @@ def process_folder(input_folder, output_folder, lower_threshold, upper_threshold
         
         # 生成输出文件名（在原文件名的.png前添加_filter）
         filename, ext = os.path.splitext(image_file)
-        output_filename = f"{filename}_filter{ext}"
+        # output_filename = f"{filename}_filter{ext}"
+        output_filename = f"{filename}{ext}"
         output_path = os.path.join(output_folder, output_filename)
         
         print(f"正在处理: {input_path}")
