@@ -53,15 +53,15 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
 
     for _ in range(num_patches):
         for _ in range(100):  # 尝试最多100次找到一个不重叠的位置
-            # 随机选择一张背景图片
-            background_path = random.choice(background_files)
-            background = cv2.imread(background_path)
+            # # 随机选择一张背景图片
+            # background_path = random.choice(background_files)
+            # background = cv2.imread(background_path)
             
-            if background is None:
-                print(f"无法读取背景图片：{background_path}")
-                return None, None
+            # if background is None:
+            #     print(f"无法读取背景图片：{background_path}")
+            #     return None, None
 
-            print(f"已选择背景图片: {os.path.basename(background_path)}")
+            # print(f"已选择背景图片: {os.path.basename(background_path)}")
             
             # 随机选择一张图片
             img_path = random.choice(img_files)

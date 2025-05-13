@@ -76,7 +76,7 @@ def process_folder(input_folder, output_folder, max_lights=10):
         
         # 生成输出文件名（在原文件名的扩展名前添加_light）
         filename, ext = os.path.splitext(image_file)
-        output_filename = f"{filename}_light{ext}"
+        output_filename = f"{filename}{ext}"
         output_path = os.path.join(output_folder, output_filename)
         
         print(f"正在处理: {input_path}")

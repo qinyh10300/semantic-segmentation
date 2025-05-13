@@ -6,7 +6,7 @@ import time
 import argparse
 from datetime import datetime
 
-def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5, 
+def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5,
                                        output_dir="gen_qipao/output", output_target_dir="gen_qipao/output_target",
                                        index=0):
     # 获取背景文件夹中的所有图片路径
@@ -16,7 +16,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     if not background_files:
         print(f"文件夹 {background_dir} 中没有找到背景图片！")
         return None, None
-
+    
     # 随机选择一张背景图片
     background_path = random.choice(background_files)
     background = cv2.imread(background_path)
@@ -24,7 +24,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     if background is None:
         print(f"无法读取背景图片：{background_path}")
         return None, None
-
+    
     print(f"已选择背景图片: {os.path.basename(background_path)}")
 
     # 获取背景图片的大小
@@ -62,9 +62,9 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
             # exit(0)
             target_file = os.path.join(img_folder, f"{base_name}_target.png")
             target_file_2 = os.path.join(img_folder, f"{base_name}_target_process.png")
-
-            target_mask = cv2.imread(target_file_2)
             
+            target_mask = cv2.imread(target_file_2)
+
             if target_mask is None:
                 print(f"无法读取对应的target图像：{target_file}")
                 continue
@@ -73,7 +73,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
             if img.shape != target_mask.shape:
                 print(f"图像和掩码大小不一致: {img_path}, {target_file}")
                 continue
-            
+
             # 检查对应的目标文件是否存在
             if not os.path.exists(target_file):
                 print(f"警告：未找到对应的目标文件： {target_file}")
@@ -129,20 +129,20 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(output_target_dir, exist_ok=True)
     
-    # # 使用当前时间戳作为文件名，精确到毫秒
+    # 使用当前时间戳作为文件名，精确到毫秒
     # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    # output_path = os.path.join(output_dir, f"{timestamp}_yuyan.png")
-    # target_output_path = os.path.join(output_target_dir, f"{timestamp}_yuyan_target.png")
+    # output_path = os.path.join(output_dir, f"{timestamp}_qipao.png")
+    # target_output_path = os.path.join(output_target_dir, f"{timestamp}_qipao_target.png")
 
     # 使用索引作为文件名
-    output_path = os.path.join(output_dir, f"yuyan_{index}.png")
-    target_output_path = os.path.join(output_target_dir, f"yuyan_target_{index}.png")
-
+    output_path = os.path.join(output_dir, f"qipao_{index}.png")
+    target_output_path = os.path.join(output_target_dir, f"qipao_target_{index}.png")
+    
     # 对生成的图像进行平滑处理（高斯模糊）
     smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
-    
+
     cv2.imwrite(output_path, smoothed_background)
-    cv2.imwrite(target_output_path, target_mask_all)
+    cv2.imwrite(target_output_path, target_mask)
     print(f"图像已保存为 {output_path}")
     print(f"目标掩码已保存为 {target_output_path}")
     return output_path, target_output_path
@@ -151,11 +151,11 @@ def main():
     parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
     parser.add_argument('--runs', type=int, default=1000, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
-    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized/yuyan", help='背景图像路径')
-    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/yuyan_data", help='气泡图像文件夹路径')
-    parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_random_make", help='输出目录')
-    parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/yuyan/yuyan_target", help='输出目标目录')
-    parser.add_argument('-i', '--index', type=int, default=52, help='开始索引')
+    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized/qipao", help='背景图像文件夹路径')
+    parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/qipao_data_matched", help='气泡图像文件夹路径')
+    parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_random_make", help='输出目录')
+    parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_target", help='输出目标目录')
+    parser.add_argument('-i', '--index', type=int, default=0, help='开始索引')
     
     args = parser.parse_args()
 
