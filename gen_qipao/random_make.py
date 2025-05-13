@@ -101,9 +101,9 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
 
 def main():
     parser = argparse.ArgumentParser(description='生成多组带气泡的背景图像')
-    parser.add_argument('--runs', type=int, default=10, help='运行生成过程的次数')
+    parser.add_argument('--runs', type=int, default=1000, help='运行生成过程的次数')
     parser.add_argument('--patches', type=int, default=50, help='每张图像中的气泡数量')
-    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized", help='背景图像文件夹路径')
+    parser.add_argument('--background_dir', type=str, default="/media/qinyh/KINGSTON/MetaData/background_data_resized/qipao", help='背景图像文件夹路径')
     parser.add_argument('--img_folder', type=str, default="/media/qinyh/KINGSTON/MetaData/qipao_data_matched", help='气泡图像文件夹路径')
     parser.add_argument('--output_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_random_make", help='输出目录')
     parser.add_argument('--output_target_dir', type=str, default="/media/qinyh/KINGSTON/GenData/qipao/qipao_target", help='输出目标目录')

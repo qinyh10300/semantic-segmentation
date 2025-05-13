@@ -8,7 +8,7 @@ import argparse
 from pathlib import Path
 from tqdm import tqdm
 
-def match_and_save_photos(raw_folder, pse_folder, output_folder, target_folder, class_name):
+def match_and_save_photos(raw_folder, pse_folder, output_folder, target_folder, class_name, index):
     """
     在两个文件夹中匹配图片并按指定格式保存
     
@@ -34,7 +34,6 @@ def match_and_save_photos(raw_folder, pse_folder, output_folder, target_folder, 
     pse_files = set(os.listdir(pse_folder))
     
     # 跟踪已处理的索引
-    index = 0
     matches = 0
     no_matches = 0
     
@@ -92,6 +91,7 @@ def main():
     parser.add_argument('-o', '--output', required=True, help='保存输出图像的文件夹')
     parser.add_argument('-t', '--target', required=True, help='保存目标图像的文件夹')
     parser.add_argument('-c', '--class_name', required=True, help='类别名称，用于生成文件名')
+    parser.add_argument('-i', '--index', type=int, default=0, help='从那个索引开始')
     
     args = parser.parse_args()
     
@@ -110,13 +110,15 @@ def main():
     print(f"- 伪标签图像文件夹: {args.pse}")
     print(f"- 输出图像文件夹: {args.output}")
     print(f"- 目标图像文件夹: {args.target}")
+    print(f"- 开始索引: {args.index}")
     
     total_matches = match_and_save_photos(
         args.raw, 
         args.pse, 
         args.output, 
         args.target,
-        args.class_name
+        args.class_name,
+        args.index
     )
     
     print(f"\n总结: 共处理了 {total_matches} 对图像")

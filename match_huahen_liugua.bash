@@ -1,8 +1,9 @@
 #!/bin/bash
 
 python photo_match.py \
-  -r "/media/qinyh/KINGSTON1/hua+liu_output_bmp" \
-  -p "/media/qinyh/KINGSTON1/hua+liu_output_png" \
+  -r "/media/qinyh/KINGSTON/multi" \
+  -p "/media/qinyh/KINGSTON/multi/label" \
   -o "/media/qinyh/KINGSTON1/huahen_liugua" \
   -t "/media/qinyh/KINGSTON1/huahen_liugua_target" \
-  -c "huahen_liugua"
+  -c "huahen_liugua" \
+  -i 36
