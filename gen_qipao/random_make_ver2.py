@@ -27,6 +27,8 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     
     print(f"已选择背景图片: {os.path.basename(background_path)}")
 
+    # print(111)
+
     # 获取背景图片的大小
     bg_height, bg_width, _ = background.shape
     
@@ -35,6 +37,8 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
 
     # 获取文件夹中的所有图片路径（不包括_target.png）
     img_files = [os.path.join(img_folder, f) for f in os.listdir(img_folder) if f.endswith(('.png')) and not f.endswith(('_target.png', '_process.png'))]
+
+    # print(111)
 
     if not img_files:
         print(f"文件夹 {img_folder} 中没有找到图片！")
