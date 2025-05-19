@@ -32,8 +32,8 @@ def resize_images(input_folder, output_folder, target_size_width):
 # 示例：将文件夹中的图片等比例resize到1920x1280，并保存在另一个文件夹
 # input_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_resize'
 # output_folder = r'D:\\大三下\\机器人与智能制造探索\\Segmentation\\data_recover'
-input_folder = "/home/qinyh/codebase/semantic-segmentation/data"
-output_folder = "/home/qinyh/codebase/semantic-segmentation/data_resized"
+input_folder = "/home/qinyh/codebase/UNet-Implement/dataset/liugua/liugua"
+output_folder = "/home/qinyh/codebase/UNet-Implement/dataset/liugua/liugua_1"
 # original_size = (5472, 3648)
 target_size_width = 1920
 
