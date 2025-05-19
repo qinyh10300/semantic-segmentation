@@ -146,7 +146,7 @@ def add_multiple_patches_to_background(background_dir, img_folder, num_patches=5
     smoothed_background = cv2.GaussianBlur(background, (9, 9), 0)
 
     cv2.imwrite(output_path, smoothed_background)
-    cv2.imwrite(target_output_path, target_mask)
+    cv2.imwrite(target_output_path, target_mask_all)
     print(f"图像已保存为 {output_path}")
     print(f"目标掩码已保存为 {target_output_path}")
     return output_path, target_output_path
